@@ -46,7 +46,7 @@ router.get('/', auth, async (req, res) => {
 router.delete('/delete/:id', auth, async (req, res) => {
     try{
         const dbres = await Note.findByIdAndDelete(req.params.id)
-        return res.status(201).json({message:`Записка с успешно удалена!`})
+        return res.status(201).json({message:`Записка успешно удалена!`})
     }catch (e) {
         res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
     }
