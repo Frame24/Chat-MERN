@@ -10,40 +10,41 @@ input.yellow-input:focus {
     box-shadow: 0 1px 0 0 #ffeb3b !important;
 }
 
-input.yellow-input+label {
+input.yellow-input + label {
     color: #ffffff !important;
 }
 
-input.yellow-input:focus+label {
+input.yellow-input:focus + label {
     color: #ffeb3b !important;
 }
 
-.marginr10{
+.marginr10 {
     margin-right: 10px;
 }
 
-.marginl10{
+.marginl10 {
     margin-left: 10px;
 }
 
-.note-footer{
+.note-footer {
     word-wrap: break-word;
     white-space: pre-wrap;
     background: #f9e88d;
-    margin:0;
-    border-bottom-left-radius: 6px ;
-    border-bottom-right-radius: 6px ;
+    margin: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
     padding: 0 5px 0 5px;
 }
 
-.note-header{
+.note-header {
     font-size: 14pt;
     margin: 0 0 -6px 0;
     background: #a27b5f;
-    border-top-left-radius: 6px ;
-    border-top-right-radius: 6px ;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     padding: 0 5px 5px 5px;
 }
+
 .cross:before {
     content: '\2716';
     font-size: 10px;
@@ -51,53 +52,54 @@ input.yellow-input:focus+label {
     cursor: pointer;
 }
 
-textarea.note-header{
+textarea.note-header {
     resize: none;
     border: 0;
     padding-top: 10px;
 }
-textarea.note-header:focus{
+
+textarea.note-header:focus {
     outline: none;
 }
 
-.col{
+.col {
     margin-top: 10px;
 }
 
-.note-date{
+.note-date {
     font-size: 10pt;
-    color:green;
+    color: green;
     text-align: right;
 }
 
-.note-big{
+.note-big {
     margin-top: 10px;
     height: 70vh;
 }
 
-.note-big button{
+.note-big button {
     float: right;
-    margin:0 0 0 10px;
+    margin: 0 0 0 10px;
 }
 
-.note-big p{
+.note-big p {
     margin-top: -6px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     padding-right: 10px;
 }
 
-.note-big .note-footer{
+.note-big .note-footer {
     height: 70vh;
 }
 
-textarea.note-footer{
+textarea.note-footer {
     border: 0;
     resize: none;
-    border-bottom-left-radius: 0px ;
-    border-bottom-right-radius: 0px ;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
-textarea.note-footer:focus{
+textarea.note-footer:focus {
     outline: none;
 }

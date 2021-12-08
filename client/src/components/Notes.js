@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {useHttp} from '../hooks/http.hooks'
+import React, {useContext} from 'react'
+import {useHttp} from '../hooks/http.hook'
 import {useMessage} from "../hooks/message.hook";
 import {useHistory} from "react-router-dom";
 import {AuthContext} from "../contexts/AuthContext";
@@ -32,19 +32,21 @@ export const Notes = ({notes}) => {
         <>
             {notes.map((note) => {
                 let tempCap = note.caption
-                if(note.caption.length>20)
-                    tempCap = note.caption.substr(0,18) + "..."
+                if (note.caption.length > 20)
+                    tempCap = note.caption.substr(0, 18) + "..."
                 let tempDesc = note.description
-                if(note.description.length>250)
-                    tempDesc = note.description.substr(0,250) + " . . ."
+                if (note.description.length > 250)
+                    tempDesc = note.description.substr(0, 250) + " . . ."
                 let id = note._id
                 return (
-                    <div className="col s3 note" style={{cursor:"pointer"}} id={id} onClick={openDescriptionHandler(note._id)}>
-                        <p className="note-header">{tempCap} <span id={note._id} className="cross" onClick={deleteHandler}/></p>
+                    <div className="col s3 note" style={{cursor: "pointer"}} id={id}
+                         onClick={openDescriptionHandler(note._id)}>
+                        <p className="note-header">{tempCap} <span id={note._id} className="cross"
+                                                                   onClick={deleteHandler}/></p>
                         <p className="note-footer #afb42b lime darken-2">
                             {tempDesc}
                             <p className="note-date">
-                                {dateFormat(note.date,"dd.mm.yyyy HH:MM")}
+                                {dateFormat(note.date, "dd.mm.yyyy HH:MM")}
                             </p>
                         </p>
                     </div>
