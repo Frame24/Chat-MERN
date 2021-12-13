@@ -36,7 +36,7 @@ export const HomePage = () => {
         clearError()
     }, [error, message, clearError])
 
-    const fetchEmail = useCallback(async () => {
+    const fetchUsername = useCallback(async () => {
         try {
             const data = await request('/api/user/' + auth.userId, 'GET', null,
                 {
@@ -49,38 +49,15 @@ export const HomePage = () => {
 
     useEffect(() => {
         console.log("fetching email")
-        fetchEmail()
+        fetchUsername()
         console.log(username)
-    }, [fetchEmail])
+    }, [fetchUsername])
 
     if (loading) {
         return <Loader/>
     }
 
     return (
-        <Form
-            className='mt-5'
-            style={{maxWidth: '320px', margin: '0 auto'}}
-            onSubmit={handleSubmit}
-        >
-            <Form.Group>
-                <Form.Label>Name:</Form.Label>
-                <Form.Control value={username} onChange={handleChangeName}/>
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>Room:</Form.Label>
-                <Form.Control as='select' value={roomId} onChange={handleChangeRoom}>
-                    <option value='free'>Free</option>
-                    <option value='job' disabled>
-                        Job
-                    </option>
-                </Form.Control>
-            </Form.Group>
-            {username && (
-                <Button variant='success' as={Link} to={`/chat`} ref={linkRef}>
-                    Chat
-                </Button>
-            )}
-        </Form>
+        <div></div>
     )
 }

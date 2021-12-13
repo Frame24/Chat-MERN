@@ -4,12 +4,7 @@ import {Accordion, Badge, Button, Card} from 'react-bootstrap'
 import {RiRadioButtonLine} from 'react-icons/ri'
 
 export const UserList = ({users}) => {
-    const usersArr = Object.entries(users)
-    // [ ['1'], [ { username: 'Alice', online: false } ] ]
-    const activeUsers = Object.values(users)
-        // [ {username: 'Alice', online: false}, {username: 'Bob', online: false} ]
-        .filter((u) => u.online).length
-
+console.log(users)
     return (
         <Accordion className='mt-4'>
             <Card>
@@ -22,23 +17,23 @@ export const UserList = ({users}) => {
                     >
                         Active users{' '}
                         <Badge variant='light' className='ml-1'>
-                            {activeUsers}
+                            {users}
                         </Badge>
                     </Accordion.Toggle>
                 </Card.Header>
-                {usersArr.map(([userId, obj]) => (
-                    <Accordion.Collapse eventKey='0' key={userId}>
+                {/*{users.map(([email]) => (
+                    <Accordion.Collapse eventKey='0' key={email}>
                         <Card.Body>
                             <RiRadioButtonLine
                                 className={`mb-1 ${
-                                    obj.online ? 'text-success' : 'text-secondary'
+                                    'text-success'
                                 }`}
                                 size='0.8em'
                             />{' '}
-                            {obj.username}
+                            {email}
                         </Card.Body>
                     </Accordion.Collapse>
-                ))}
+                ))}*/}
             </Card>
         </Accordion>
     )

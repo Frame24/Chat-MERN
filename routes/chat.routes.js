@@ -85,4 +85,17 @@ router.post(
         }
     })
 
+router.get('/:id', auth, async (req, res) => {
+    try {
+        const chat = await Chat.findById(req.params.id)
+        if(!chat.users.includes(req.user.userId)){
+            return res.status(400).json({message: 'Вы не состоите в данном чате'})
+        }
+        console.log(chat)
+        res.json(chat)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
 module.exports = router
