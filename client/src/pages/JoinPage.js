@@ -6,7 +6,7 @@ import {AuthContext} from "../contexts/AuthContext";
 import PropTypes from 'prop-types'
 import {Loader} from "../components/Loader";
 
-export const CreatePage = () => {
+export const JoinPage = () => {
 
     const auth = useContext(AuthContext)
     const {loading, request, error, clearError} = useHttp()
@@ -20,27 +20,9 @@ export const CreatePage = () => {
     }, [error, message, clearError])
 
     const [form, setForm] = useState({
-        chatName: "",
+        chatId: "",
         password: ""
     })
-
-/*    const fetchNotes = useCallback(async () => {
-        try {
-            console.log(id)
-            const data = await request(`/api/note/${id}`, 'GET', null,
-                {
-                    Authorization: `Bearer ${auth.token}`
-                })
-            setForm(data)
-        } catch (e) {
-        }
-    }, [id, auth, request])
-
-    useEffect(() => {
-        if (id) {
-            fetchNotes()
-        }
-    }, [fetchNotes])*/
 
     if (loading) {
         return <Loader/>
@@ -49,20 +31,12 @@ export const CreatePage = () => {
         setForm({...form, [event.target.name]: event.target.value})
     }
 
-    const saveHandler = async () => {
+    const joinHandler = async () => {
         try {
-            let data = ""
-            if (id) {
-                data = await request(`/api/chat/update/${id}`, 'POST', {...form},
-                    {
-                        Authorization: `Bearer ${auth.token}`
-                    })
-            } else {
-                data = await request('/api/chat/create', 'POST', {...form},
-                    {
-                        Authorization: `Bearer ${auth.token}`
-                    })
-            }
+            let data = await request('/api/chat/join', 'POST', {...form},
+                {
+                    Authorization: `Bearer ${auth.token}`
+                })
             message(data.message)
             history.push("/");
         } catch (e) {
@@ -78,15 +52,15 @@ export const CreatePage = () => {
         <div className="row">
             {/*<Qwe/>*/}
             <div className="col s6 offset-s3">
-                <h1 className="white-text">Создание чата</h1>
+                <h1 className="white-text">Вход в чат</h1>
                 <div className="card #757575 grey darken-1">
                     <div className="card-content white-text">
                         <div>
                             <div className="input-field">
-                                <input className="yellow-input" placeholder="Введите название чата"
-                                       id="chatName" type="text" name="chatName"
-                                       value={form.chatName} onChange={changeHandler}/>
-                                <label htmlFor="chatName">Название чата</label>
+                                <input className="yellow-input" placeholder="Введите id чата"
+                                       id="chatId" type="text" name="chatId"
+                                       value={form.chatId} onChange={changeHandler}/>
+                                <label htmlFor="chatName">Id чата</label>
                             </div>
                             <div className="input-field">
                                 <input className="yellow-input" placeholder="Введите пароль"
@@ -97,8 +71,8 @@ export const CreatePage = () => {
                             <button className="btn grey black-text" onClick={cancelHandler}
                                     disabled={loading}>Отмена
                             </button>
-                            <button className="btn #9e9e9e grey lighten-1" onClick={saveHandler}
-                                    disabled={loading}>Сохранить
+                            <button className="btn #9e9e9e grey lighten-1" onClick={joinHandler}
+                                    disabled={loading}>Войти
                             </button>
                         </div>
                     </div>
@@ -106,12 +80,4 @@ export const CreatePage = () => {
             </div>
         </div>
     )
-}
-
-CreatePage.defaultProps = {
-    id: "",
-}
-
-CreatePage.propTypes = {
-    id: PropTypes.string,
 }

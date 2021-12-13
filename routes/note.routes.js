@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const Note = require('../models/Note')
+const Note = require('../models/Chat')
 const auth = require('../middleware/auth.middleware')
 const config = require('config')
 const shortid = require('shortid')
