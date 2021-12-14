@@ -1,2 +1,2 @@
-To setup the project you need to write "npm install" for the project directory and then for the client directory separately
+To setup the project you need to write "npm install" for the project directory and then for the client directory separately (probably for each page file for chat, but not sure)
 To execute the project you need to write "npm run dev" in console that will run both server and client
