@@ -1,11 +1,11 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 // styles
 import {Button, Form} from 'react-bootstrap'
 // emoji
 // icons
 import {FiSend} from 'react-icons/fi'
 
-export const MessageForm = ({username, sendMessage}) => {
+export const MessageForm = ({username, sendMessage, autoinput}) => {
     const [text, setText] = useState('')
     const [showEmoji, setShowEmoji] = useState(false)
 
@@ -29,6 +29,10 @@ export const MessageForm = ({username, sendMessage}) => {
             setText('')
         }
     }
+
+    useEffect(()=>{
+        setText(autoinput)
+    },[autoinput])
 
     return (
         <>
