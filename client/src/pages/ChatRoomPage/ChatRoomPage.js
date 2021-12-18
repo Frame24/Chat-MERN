@@ -125,25 +125,6 @@ export function ChatRoomPage() {
             .then(res => {
                 setFetchedMessages(res)
             })
-        console.log(fetchedMessages)
-        /*chatHistory.forEach((messageId) => {
-            fetchMessageById(messageId)
-                .then(data => {
-                        setFetchedMessages((prevMes) => [
-                            ...prevMes, data
-                        ]);
-                    }
-                )
-        })*/
-        /*for (const message of chatHistory) {
-            fetchMessageById(message, fetchedMessages, roomId)
-                .then(data => {
-                        setFetchedMessages((prevMes) => [
-                            ...prevMes, data
-                        ]);
-                    }
-                )
-        }*/
     }, [chatHistory])
 
     return (

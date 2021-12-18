@@ -14,9 +14,13 @@ router.post('/create', auth, async (req, res) => {
     try {
         const {chatName, password} = req.body
         const hashedPassword = await bcrypt.hash(password, 12)
-        const chat = new Chat({name: chatName, password: hashedPassword, owner: req.user.userId})
-        chat.users.push(req.user.userId);
+        const user = await User.findById(req.user.userId)
+        const chat = new Chat({name: chatName, password: hashedPassword, owner: user._id})
+        chat.users.push(user._id);
         await chat.save()
+
+        user.chats.push(chat._id)
+        await user.save();
 
         res.status(201).json({message: 'Чат создан'})
     } catch (e) {
@@ -30,8 +34,6 @@ router.post(
     [
         check('chatId', 'Введите id чата').exists(),
         check('password', 'Введите пароль чата').exists(),
-        /*check('email', 'Войдите в систему').isEmpty(),
-        check('userpassword', 'Войдите в систему').isEmpty(),*/
     ],
     auth,
     async (req, res) => {
@@ -45,7 +47,7 @@ router.post(
                 })
             }
 
-            const {chatId, password, email, userpassword} = req.body
+            const {chatId, password} = req.body
 
             const chat = await Chat.findById(chatId)
 
@@ -60,22 +62,17 @@ router.post(
                 return res.status(400).json({message: 'Неверно введен id или пароль'})
             }
 
-            /*const user = await User.findOne({email: email})
-            if (!user) {
-                return res.status(400).json({message: 'Войдите в систему'})
-            }
+            const user = await User.findById(req.user.userId)
 
-            const isPasswordMatchesForUser = await bcrypt.compare(userpassword, user.password)
-
-            if (!isPasswordMatchesForUser) {
-                return res.status(400).json({message: 'Войдите в систему'})
-            }*/
-            if (chat.users.includes(req.user.userId)) {
+            if (chat.users.includes(user._id)) {
                 return res.status(400).json({message: 'Пользователь уже добавлен в чат'})
             }
 
             chat.users.push(req.user.userId);
-            chat.save();
+            await chat.save();
+
+            user.chats.push(chat._id)
+            await user.save();
 
             return res.status(200).json({chat})
 

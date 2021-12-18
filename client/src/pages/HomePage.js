@@ -2,9 +2,10 @@ import React, {useCallback, useContext, useEffect, useRef, useState} from 'react
 import {AuthContext} from "../contexts/AuthContext";
 import {useHttp} from "../hooks/http.hook";
 import {useMessage} from "../hooks/message.hook";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {Loader} from "../components/Loader";
-import {Button, Form} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
+import {ChatList} from "./ChatList/ChatList";
 
 export const HomePage = () => {
 
@@ -18,17 +19,8 @@ export const HomePage = () => {
     const [roomId, setRoomId] = useState('free')
     const linkRef = useRef(null)
 
-    const handleChangeName = (e) => {
-        setUsername(e.target.value)
-    }
-
-    const handleChangeRoom = (e) => {
-        setRoomId(e.target.value)
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        linkRef.current.click()
+    const isIterable = (value) => {
+        return Symbol.iterator in Object(value);
     }
 
     useEffect(() => {
@@ -51,11 +43,61 @@ export const HomePage = () => {
         fetchUsername()
     }, [fetchUsername])
 
+
+    const [chatsIds, setChatsIds] = useState([])
+    const fetchUserChats = useCallback(async () => {
+        try {
+            return await request(`/api/${auth.userId}/chats`, 'GET', null,
+                {
+                    Authorization: `Bearer ${auth.token}`
+                })
+        } catch (e) {
+        }
+    }, [])
+
+    useEffect(() => {
+        fetchUserChats().then(r => setChatsIds(r));
+        console.log("chatsIds")
+        console.log(chatsIds)
+    }, [chatsIds])
+
+    const fetchChatsByIds = async (chatsIdsArr) => {
+        if (!isIterable(chatsIdsArr))
+            return []
+        let resArr = [{}]
+        for (let chatId of chatsIdsArr) {
+            try {
+                let data = await request(`/api/chat/${roomId}`, 'GET', null,
+                    {
+                        Authorization: `Bearer ${auth.token}`
+                    });
+                resArr.push(data)
+            } catch (e) {
+            }
+        }
+        if (resArr.length > 1) {
+            resArr.shift()
+        }
+        return resArr
+    }
+
+    const [fetchedChats, setFetchedChats] = useState([])
+    useEffect(() => {
+        fetchChatsByIds(chatsIds)
+            .then(res => {
+                setFetchedChats(res)
+            })
+    }, [chatsIds])
+
     if (loading) {
         return <Loader/>
     }
 
     return (
-        <div><h1>{username}</h1></div>
+        <Container>
+            <h2 className='text-center'>Выберите чат</h2>
+            <div>{fetchedChats.length}</div>
+            {/*<ChatList fetchedMessages={fetchedChats}/>*/}
+        </Container>
     )
 }
