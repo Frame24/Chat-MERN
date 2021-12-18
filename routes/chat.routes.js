@@ -1,6 +1,7 @@
 const {Router} = require('express')
 const Chat = require('../models/Chat')
 const User = require('../models/User')
+const Message = require('../models/Message')
 const auth = require('../middleware/auth.middleware')
 const config = require('config')
 const shortid = require('shortid')
@@ -37,7 +38,6 @@ router.post(
         try {
 
             const errors = validationResult(req)
-            console.log(errors)
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
@@ -91,11 +91,48 @@ router.get('/:id', auth, async (req, res) => {
         if(!chat.users.includes(req.user.userId)){
             return res.status(400).json({message: 'Вы не состоите в данном чате'})
         }
-        console.log(chat)
         res.json(chat)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
 
+router.post('/:id/message', auth, async (req, res) => {
+    try {
+        const chat = await Chat.findById(req.params.id)
+        if(!chat.users.includes(req.user.userId)){
+            return res.status(400).json({message: 'Вы не состоите в данном чате'})
+        }
+
+        if(req.body.newMessage === ""){
+            return res.status(400).json({message: 'Попытка отправки пустого сообщения'})
+        }
+        console.log(req.body.newMessage)
+        const message = new Message({user: req.user.userId, text: req.body.newMessage, chat: chat._id})
+        await message.save()
+        chat.history.push(message._id)
+        await chat.save()
+        res.status(200).json(message)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        console.log(e)
+    }
+})
+
+router.get('/:roomId/message/:messageId', auth, async (req, res) => {
+    try {
+        const chat = await Chat.findById(req.params.roomId)
+        if(!chat.users.includes(req.user.userId)){
+            return res.status(400).json({message: 'Вы не состоите в данном чате'})
+        }
+        if(!chat.history.includes(req.params.messageId)){
+            return res.status(400).json({message: 'Сообщение не принадлежит данному чату'})
+        }
+        const message = await Message.findById(req.params.messageId)
+        res.status(200).json(message)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        console.log(e)
+    }
+})
 module.exports = router

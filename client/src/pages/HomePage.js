@@ -48,9 +48,7 @@ export const HomePage = () => {
     }, [auth, request])
 
     useEffect(() => {
-        console.log("fetching email")
         fetchUsername()
-        console.log(username)
     }, [fetchUsername])
 
     if (loading) {
@@ -58,6 +56,6 @@ export const HomePage = () => {
     }
 
     return (
-        <div></div>
+        <div><h1>{username}</h1></div>
     )
 }

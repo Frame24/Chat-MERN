@@ -2,11 +2,12 @@ import {MessageForm} from './MessageForm'
 import {MessageList} from './MessageList'
 import {UserList} from './UserList'
 import {Container} from 'react-bootstrap'
-import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {AuthContext} from "../../contexts/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
 import {useMessage} from "../../hooks/message.hook";
 import {useHistory, useParams} from "react-router-dom";
+import {Loader} from "../../components/Loader";
 
 export function ChatRoomPage() {
 
@@ -19,11 +20,19 @@ export function ChatRoomPage() {
     const linkRef = useRef(null)
     const [messageText, senderName, messageId] = ""
 
-    const sendMessage = useCallback(async (messageText, senderName) => {
+    const sendMessage = useCallback(async (messageText) => {
         try {
+            let data = await request(`/api/chat/${roomId}/message`, 'POST', {
+                    newMessage: messageText,
+                },
+                {
+                    Authorization: `Bearer ${auth.token}`
+                })
+            fetchChatData()
         } catch (e) {
         }
     }, [messageText, senderName])
+
     const removeMessage = useCallback(async (messageId) => {
         try {
         } catch (e) {
@@ -49,17 +58,15 @@ export function ChatRoomPage() {
     //Fetching chat data
     const [chatUsers, setChatUsers] = useState([])
     const [chatHistory, setChatHistory] = useState([])
-
     const fetchChatData = useCallback(async () => {
         try {
             const data = await request(`/api/chat/${roomId}`, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
-            setChatHistory(data.history)
-            setChatUsers(data.users)
+            setChatUsers(data.users);
+            setChatHistory(data.history);
         } catch (e) {
-            console.log(e)
         }
     }, [roomId, auth, request])
 
@@ -67,17 +74,13 @@ export function ChatRoomPage() {
         if (roomId) {
             fetchChatData()
         }
-        console.log("Fetching chat data")
-        console.log(chatUsers)
-        console.log(chatHistory)
     }, [fetchChatData, roomId])
-
 
     return (
         <Container>
             <h2 className='text-center'>Room</h2>
             {/*<UserList users={chatUsers}/>*/}
-            <MessageList messages={chatHistory} removeMessage={removeMessage}/>
+            <MessageList messages={chatHistory} removeMessage={removeMessage} roomId={roomId}/>
             <MessageForm username={username} sendMessage={sendMessage}/>
         </Container>
     )

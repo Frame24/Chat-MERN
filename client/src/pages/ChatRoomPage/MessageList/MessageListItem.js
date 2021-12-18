@@ -4,12 +4,10 @@ import {Button, Card, ListGroup} from 'react-bootstrap'
 // icons
 import {AiOutlineDelete} from 'react-icons/ai'
 
-export const MessageListItem = ({msg, removeMessage}) => {
+export const MessageListItem = ({messageId, messageText, senderName, createdAt, currentUser, removeMessage}) => {
     const handleRemoveMessage = (id) => {
         removeMessage(id)
     }
-
-    const {messageId, messageText, senderName, createdAt, currentUser} = msg
     return (
         <ListGroup.Item
             className={`d-flex ${currentUser ? 'justify-content-end' : ''}`}

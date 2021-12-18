@@ -2,10 +2,8 @@ import {useState} from 'react'
 // styles
 import {Button, Form} from 'react-bootstrap'
 // emoji
-import {Picker} from 'emoji-mart'
 // icons
 import {FiSend} from 'react-icons/fi'
-import {GrEmoji} from 'react-icons/gr'
 
 export const MessageForm = ({username, sendMessage}) => {
     const [text, setText] = useState('')
@@ -27,7 +25,7 @@ export const MessageForm = ({username, sendMessage}) => {
         e.preventDefault()
         const trimmed = text.trim()
         if (trimmed) {
-            sendMessage({messageText: text, senderName: username})
+            sendMessage(trimmed)
             setText('')
         }
     }
@@ -36,9 +34,9 @@ export const MessageForm = ({username, sendMessage}) => {
         <>
             <Form onSubmit={handleSendMessage}>
                 <Form.Group className='d-flex'>
-                    <Button variant='primary' type='button' onClick={handleEmojiShow}>
+                    {/*<Button variant='primary' type='button' onClick={handleEmojiShow}>
                         <GrEmoji/>
-                    </Button>
+                    </Button>*/}
                     <Form.Control
                         value={text}
                         onChange={handleChangeText}
@@ -51,7 +49,7 @@ export const MessageForm = ({username, sendMessage}) => {
                 </Form.Group>
             </Form>
             {/* emoji */}
-            {showEmoji && <Picker onSelect={handleEmojiSelect} emojiSize={20}/>}
+            {/*{showEmoji && <Picker onSelect={handleEmojiSelect} emojiSize={20}/>}*/}
         </>
     )
 }
