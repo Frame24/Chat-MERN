@@ -46,20 +46,20 @@ export function ChatRoomPage() {
     }, [messageId])
 
     //Fetching username
-    const fetchUsername = useCallback(async () => {
+    const fetchUserById = useCallback(async (userId) => {
         try {
-            const data = await request('/api/user/' + auth.userId, 'GET', null,
+            return await request('/api/user/' + userId, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
-            setUsername(data)
         } catch (e) {
         }
     }, [auth, request])
 
     useEffect(() => {
-        fetchUsername()
-    }, [fetchUsername])
+        fetchUserById(auth.userId)
+            .then(r => setUsername(r))
+    }, [])
 
     //Fetching chat data
     const [chatUsers, setChatUsers] = useState()
@@ -108,11 +108,15 @@ export function ChatRoomPage() {
                     {
                         Authorization: `Bearer ${auth.token}`
                     });
+                await fetchUserById(data.user)
+                    .then(r=>data.user = r)
                 resArr.push(data)
             } catch (e) {
             }
         }
-        console.log(resArr)
+        if(resArr.length>1){
+            resArr.shift()
+        }
         return resArr
     }
 

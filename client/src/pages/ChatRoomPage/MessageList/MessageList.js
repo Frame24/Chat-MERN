@@ -1,4 +1,6 @@
 import {ListGroup} from 'react-bootstrap'
+import {MessageListItem} from "./MessageListItem";
+import {useEffect, useRef} from "react";
 
 const listStyles = {
     height: '80vh',
@@ -8,23 +10,33 @@ const listStyles = {
 }
 
 export const MessageList = ({fetchedMessages, removeMessage, roomId}) => {
+
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [fetchedMessages]);
+
     return (
         <>
             <ListGroup variant='flush' style={listStyles}>
                 {/*<div key={newMessage._id}>{newMessage.text}</div>*/}
                 {fetchedMessages.map((msg) => (
-                    <div key={msg._id}>{msg.text}</div>
-                    /*<MessageListItem
-                        key={msg.messageId}
-                        messageId ={}
-                        messageText ={}
-                        senderName ={}
-                        createdAt ={}
-                        currentUser ={}
+                    <MessageListItem
+                        key={msg._id}
+                        messageId ={msg._id}
+                        messageText ={msg.text}
+                        senderName ={msg.user}
+                        createdAt ={msg.date}
+                        currentUser ={msg.user}
                         removeMessage={removeMessage}
-                    />*/
+                    />
                 ))}
-                {/*<span ref={messagesEndRef}></span>*/}
+                <span ref={messagesEndRef}/>
             </ListGroup>
         </>
     )

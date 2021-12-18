@@ -13,17 +13,35 @@ export const MessageListItem = ({messageId, messageText, senderName, createdAt, 
             className={`d-flex ${currentUser ? 'justify-content-end' : ''}`}
         >
             <Card
-                bg={`${currentUser ? 'primary' : 'secondary'}`}
-                text='light'
-                style={{width: '55%'}}
+                style={{
+                    width: 'auto',
+                    backgroundColor: "inherit",
+                    margin: "10px 10px 10px 10px",
+                }}
             >
-                <Card.Header className='d-flex justify-content-between align-items-center'>
-                    <Card.Text as={TimeAgo} date={createdAt} className='small'/>
-                    <Card.Text>{senderName}</Card.Text>
+                <Card.Header className='justify-content-between align-items-center'
+                             style={{
+                                 display: "inline-flex",
+                                 width: "auto,"
+                             }}>
+                    <Card.Text
+                        style={{
+                            margin: "0px 10px",
+                            fontWeight: "bold",
+                            color: "#999999",
+                        }}>{senderName}</Card.Text>
+                    <Card.Text as={TimeAgo} date={createdAt} className='small'
+                               style={{
+                                   fontWeight: "100",
+                                   color: "#676767",
+                               }}/>
                 </Card.Header>
-                <Card.Body className='d-flex justify-content-between align-items-center'>
-                    <Card.Text>{messageText}</Card.Text>
-                    {currentUser && (
+                <Card.Body className='justify-content-between align-items-center'>
+                    <Card.Text
+                        style={{
+                            margin: "0px 10px",
+                        }}>{messageText}</Card.Text>
+                    {/*{currentUser && (
                         <Button
                             variant='none'
                             className='text-warning'
@@ -31,7 +49,7 @@ export const MessageListItem = ({messageId, messageText, senderName, createdAt, 
                         >
                             <AiOutlineDelete/>
                         </Button>
-                    )}
+                    )}*/}
                 </Card.Body>
             </Card>
         </ListGroup.Item>
