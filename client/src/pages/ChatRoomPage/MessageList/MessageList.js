@@ -1,6 +1,7 @@
 import {ListGroup} from 'react-bootstrap'
 import {MessageListItem} from "./MessageListItem";
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
+import {AuthContext} from "../../../contexts/AuthContext";
 
 const listStyles = {
     height: '80vh',
@@ -9,7 +10,9 @@ const listStyles = {
     overflow: 'auto'
 }
 
-export const MessageList = ({fetchedMessages, removeMessage, roomId}) => {
+export const MessageList = ({fetchedMessages, removeMessage, currentUser}) => {
+
+    const auth = useContext(AuthContext)
 
     const messagesEndRef = useRef(null)
 
@@ -32,7 +35,7 @@ export const MessageList = ({fetchedMessages, removeMessage, roomId}) => {
                         messageText ={msg.text}
                         senderName ={msg.user}
                         createdAt ={msg.date}
-                        currentUser ={msg.user}
+                        currentUser ={currentUser}
                         removeMessage={removeMessage}
                     />
                 ))}

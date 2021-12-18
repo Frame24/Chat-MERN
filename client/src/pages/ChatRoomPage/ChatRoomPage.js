@@ -150,7 +150,7 @@ export function ChatRoomPage() {
         <Container>
             <h2 className='text-center'>{chatName}</h2>
             {/*<UserList users={chatUsers}/>*/}
-            <MessageList fetchedMessages={fetchedMessages} removeMessage={removeMessage} roomId={roomId}/>
+            <MessageList fetchedMessages={fetchedMessages} removeMessage={removeMessage} currentUser={username}/>
             <MessageForm username={username} sendMessage={sendMessage}
                          autoinput={"Сообщение №" + fetchedMessages.length}/>
         </Container>
