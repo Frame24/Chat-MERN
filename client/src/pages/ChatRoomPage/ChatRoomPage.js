@@ -86,13 +86,12 @@ export function ChatRoomPage() {
 
     //Messages
 
-    const fetchMessageById = (messageId) => {
+    const fetchMessageById = async (messageId, roomId) => {
         try {
-            let data = request(`/api/chat/${roomId}/message/${messageId}`, 'GET', null,
+            let data = await request(`/api/chat/${roomId}/message/${messageId}`, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 });
-            console.log(`Fetched ${data.text}`)
             return data
         } catch (e) {
         }

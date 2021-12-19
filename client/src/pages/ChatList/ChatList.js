@@ -2,6 +2,7 @@ import {ListGroup} from 'react-bootstrap'
 import {ChatListItem} from "./ChatListItem";
 import {useContext, useEffect, useRef} from "react";
 import {AuthContext} from "../../contexts/AuthContext";
+import {useHttp} from "../../hooks/http.hook";
 
 const listStyles = {
     height: '80vh',
@@ -10,34 +11,35 @@ const listStyles = {
     overflow: 'auto'
 }
 
-export const ChatList = ({fetchedMessages}) => {
+export const ChatList = ({fetchedChats}) => {
 
     const auth = useContext(AuthContext)
-
+    const {loading, request, error, clearError} = useHttp()
+    const chatsLastMessageDict = {}
     const messagesEndRef = useRef(null)
 
-    const scrollToBottom = () => {
+    const scrollToRefSpan = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
 
     useEffect(() => {
-        scrollToBottom()
-    }, [fetchedMessages]);
+        scrollToRefSpan()
+    }, [fetchedChats]);
 
     return (
         <>
             <ListGroup variant='flush' style={listStyles}>
-                {/*<div key={newMessage._id}>{newMessage.text}</div>*/}
-                {fetchedMessages.map((msg) => (
+                <span ref={messagesEndRef}/>
+                {fetchedChats.map((chat) => (
                     <ChatListItem
-                        key={msg._id}
-                        messageId ={msg._id}
-                        messageText ={msg.text}
-                        senderName ={msg.user}
-                        createdAt ={msg.date}
+                        key={chat._id}
+                        chatId={chat._id}
+                        lastMessageText={chat.lastMessage ? chat.lastMessage.text : ""}
+                        lastMessageSenderName={chat.lastMessage ? chat.lastMessage.user : ""}
+                        lastMessageCreatedAt={chat.lastMessage ? chat.lastMessage.date : "2000-12-18T16:55:08.832+00:00"}
+                        chatName={chat.name}
                     />
                 ))}
-                <span ref={messagesEndRef}/>
             </ListGroup>
         </>
     )

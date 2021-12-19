@@ -16,38 +16,39 @@ export const HomePage = () => {
     const message = useMessage()
     const history = useHistory();
     const [username, setUsername] = useState([])
-    const [roomId, setRoomId] = useState('free')
     const linkRef = useRef(null)
 
     const isIterable = (value) => {
         return Symbol.iterator in Object(value);
     }
 
-    useEffect(() => {
+    // Выводит ошибки, сязанные с запросами на сервер
+    /*useEffect(() => {
         message(error)
         clearError()
-    }, [error, message, clearError])
+    }, [error, message, clearError])*/
 
-    const fetchUsername = useCallback(async () => {
+    //Fetching username
+    const fetchUserById = async (userId) => {
         try {
-            const data = await request('/api/user/' + auth.userId, 'GET', null,
+            return await request('/api/user/' + userId, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
-            setUsername(data)
         } catch (e) {
         }
-    }, [auth, request])
+    }
 
     useEffect(() => {
-        fetchUsername()
-    }, [fetchUsername])
+        fetchUserById(auth.userId)
+            .then(r => setUsername(r))
+    }, [auth])
 
 
     const [chatsIds, setChatsIds] = useState([])
     const fetchUserChats = useCallback(async () => {
         try {
-            return await request(`/api/${auth.userId}/chats`, 'GET', null,
+            return await request(`/api/user/${auth.userId}/chats`, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
@@ -56,10 +57,9 @@ export const HomePage = () => {
     }, [])
 
     useEffect(() => {
-        fetchUserChats().then(r => setChatsIds(r));
-        console.log("chatsIds")
-        console.log(chatsIds)
-    }, [chatsIds])
+        fetchUserChats()
+            .then(r => setChatsIds(r));
+    }, [])
 
     const fetchChatsByIds = async (chatsIdsArr) => {
         if (!isIterable(chatsIdsArr))
@@ -67,10 +67,24 @@ export const HomePage = () => {
         let resArr = [{}]
         for (let chatId of chatsIdsArr) {
             try {
-                let data = await request(`/api/chat/${roomId}`, 'GET', null,
+                let data = await request(`/api/chat/${chatId}`, 'GET', null,
                     {
                         Authorization: `Bearer ${auth.token}`
                     });
+                if (data.history.length > 0) {
+                    data.lastMessage = await request(`/api/chat/${chatId}/message/${data.history[data.history.length - 1]}`, 'GET', null,
+                        {
+                            Authorization: `Bearer ${auth.token}`
+                        });
+                    await fetchUserById(data.lastMessage.user)
+                        .then(r => data.lastMessage.user = r)
+                }
+                else{
+                    console.log(chatId)
+                    data.lastMessage = {
+                        text: "На данный момент, в чате нет сообщений",
+                    }
+                }
                 resArr.push(data)
             } catch (e) {
             }
@@ -89,15 +103,17 @@ export const HomePage = () => {
             })
     }, [chatsIds])
 
-    if (loading) {
+/*    if (loading) {
         return <Loader/>
-    }
+    }*/
 
     return (
         <Container>
             <h2 className='text-center'>Выберите чат</h2>
-            <div>{fetchedChats.length}</div>
-            {/*<ChatList fetchedMessages={fetchedChats}/>*/}
+            {/*<div>{fetchedChats.map(ch=>{
+                return (<div>{ch._id}</div>)
+            })}</div>*/}
+            <ChatList fetchedChats={fetchedChats}/>
         </Container>
     )
 }

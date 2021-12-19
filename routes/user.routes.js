@@ -17,8 +17,6 @@ router.get('/:id', auth, async (req, res) => {
 router.get('/:id/chats', auth, async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
-        console.log("user.chats")
-        console.log(user.chats)
         res.json(user.chats)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
