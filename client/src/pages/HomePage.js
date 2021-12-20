@@ -89,7 +89,7 @@ export const HomePage = () => {
             } catch (e) {
             }
         }
-        if (resArr.length > 1) {
+        if (resArr.length > 0) {
             resArr.shift()
         }
         return resArr

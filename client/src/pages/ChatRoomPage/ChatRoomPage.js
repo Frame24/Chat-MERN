@@ -32,6 +32,8 @@ export function ChatRoomPage() {
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
+            await fetchUserById(data.user)
+                .then(r=>data.user = r)
             setFetchedMessages((prevMes) => [
                 ...prevMes, data
             ]);
@@ -86,12 +88,14 @@ export function ChatRoomPage() {
 
     //Messages
 
-    const fetchMessageById = async (messageId, roomId) => {
+    const fetchMessageById = async (messageId) => {
         try {
             let data = await request(`/api/chat/${roomId}/message/${messageId}`, 'GET', null,
                 {
                     Authorization: `Bearer ${auth.token}`
                 });
+            await fetchUserById(data.user)
+                .then(r=>data.user = r)
             return data
         } catch (e) {
         }
@@ -102,18 +106,17 @@ export function ChatRoomPage() {
             return []
         let resArr = [{}]
         for (let messageId of messageIdArr) {
+            let data = ""
             try {
-                let data = await request(`/api/chat/${roomId}/message/${messageId}`, 'GET', null,
-                    {
-                        Authorization: `Bearer ${auth.token}`
-                    });
-                await fetchUserById(data.user)
-                    .then(r=>data.user = r)
+                 await fetchMessageById(messageId)
+                     .then(res=>{
+                         data = res
+                     })
                 resArr.push(data)
             } catch (e) {
             }
         }
-        if(resArr.length>1){
+        if(resArr.length>0){
             resArr.shift()
         }
         return resArr

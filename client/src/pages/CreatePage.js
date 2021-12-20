@@ -19,7 +19,7 @@ export const CreatePage = () => {
         clearError()
     }, [error, message, clearError])
 
-    const [form, setForm] = useState({
+    const [chatForm, setChatForm] = useState({
         chatName: "",
         password: ""
     })
@@ -31,7 +31,7 @@ export const CreatePage = () => {
                 {
                     Authorization: `Bearer ${auth.token}`
                 })
-            setForm(data)
+            setChatForm(data)
         } catch (e) {
         }
     }, [id, auth, request])
@@ -46,19 +46,19 @@ export const CreatePage = () => {
         return <Loader/>
     }
     const changeHandler = event => {
-        setForm({...form, [event.target.name]: event.target.value})
+        setChatForm({...chatForm, [event.target.name]: event.target.value})
     }
 
     const saveHandler = async () => {
         try {
             let data = ""
             if (id) {
-                data = await request(`/api/chat/update/${id}`, 'POST', {...form},
+                data = await request(`/api/chat/update/${id}`, 'POST', {...chatForm},
                     {
                         Authorization: `Bearer ${auth.token}`
                     })
             } else {
-                data = await request('/api/chat/create', 'POST', {...form},
+                data = await request('/api/chat/create', 'POST', {...chatForm},
                     {
                         Authorization: `Bearer ${auth.token}`
                     })
@@ -85,13 +85,13 @@ export const CreatePage = () => {
                             <div className="input-field">
                                 <input className="yellow-input" placeholder="Введите название чата"
                                        id="chatName" type="text" name="chatName"
-                                       value={form.chatName} onChange={changeHandler}/>
+                                       value={chatForm.chatName} onChange={changeHandler}/>
                                 <label htmlFor="chatName">Название чата</label>
                             </div>
                             <div className="input-field">
                                 <input className="yellow-input" placeholder="Введите пароль"
                                        id="password" type="password" name="password"
-                                       value={form.password} onChange={changeHandler}/>
+                                       value={chatForm.password} onChange={changeHandler}/>
                                 <label htmlFor="password">Пароль</label>
                             </div>
                             <button className="btn grey black-text" onClick={cancelHandler}

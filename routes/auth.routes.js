@@ -184,25 +184,25 @@ router.get(
                     console.log(data)
                     //res.send(data)
                 })
-            /*
-            to get user info
-            await request
-                .get('https://api.vk.com/method/users.get' +
-                    '?user_id=' + data.user_id +
-                    '&access_token=' + data.access_token +
-                    '&fields=sex,contacts' +
-                    '&v=5.131')
-                .then(result => {
-                    console.log(result.body)
-                    res.redirect("http://localhost:3000/")
-                    //res.send(result.body)
-                });*/
 
-            const email = data.email
-            let user = await User.findOne({email: email, isOauth: true})
+            let user = await User.findOne({email: data.email, isOauth: true})
             if (!user) {
-                user = new User({email: email, isOauth: true})
+                user = new User({email: data.email, isOauth: true, vkUserId: data.user_id, vkAccessToken: data.access_token})
                 await user.save()
+            }
+            else{
+                let changed = false
+                if(user.vkUserId !== data.user_id){
+                    changed = true
+                    user.vkUserId = data.user_id
+                }
+                if(user.vkAccessToken !== data.access_token){
+                    changed = true
+                    user.vkAccessToken = data.access_token
+                }
+                if(changed){
+                    await user.save()
+                }
             }
 
             const token = jwt.sign(
@@ -210,7 +210,6 @@ router.get(
                 config.get("jwtSecret"),
                 {expiresIn: '24h'}
             )
-            console.log(user.id)
             res.redirect(config.get("clientUrl") + `/${token}/${user.id}`)
         } catch (e) {
             console.log(e)

@@ -40,7 +40,7 @@ export const AuthPage = () => {
     }
 
     if(token && userId){
-        auth.login(token, userId)
+        auth.login(token,userId,true)
     }
 
     return (
