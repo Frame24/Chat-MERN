@@ -2,20 +2,14 @@ import React, {useContext, useEffect, useState} from 'react'
 import {useHttp} from '../hooks/http.hook'
 import {useMessage} from "../hooks/message.hook";
 import {AuthContext} from "../contexts/AuthContext";
-
-/*class Qwe extends React.Component{
-    render() {
-        return (
-        <div>
-            queen
-        </div>)
-    }
-}*/
+import {useHistory, useParams} from "react-router-dom";
 
 export const AuthPage = () => {
     const auth = useContext(AuthContext)
     const {loading, request, error, clearError} = useHttp()
+    const {token, userId} = useParams()
     const message = useMessage()
+    const history = useHistory();
     const [form, setForm] = useState({
         email: "",
         password: ""
@@ -28,11 +22,6 @@ export const AuthPage = () => {
     const changeHandler = event => {
         setForm({...form, [event.target.name]: event.target.value})
     }
-
-    /*useEffect(()=>{
-        window.M.updateTextFields()
-        message("123123321")
-    },[])*/
 
     const registerHandler = async () => {
         try {
@@ -50,10 +39,12 @@ export const AuthPage = () => {
         }
     }
 
+    if(token && userId){
+        auth.login(token, userId)
+    }
 
     return (
         <div className="row">
-            {/*<Qwe/>*/}
             <div className="col s6 offset-s3">
                 <h1 className="white-text">Заметки</h1>
                 <div className="card #757575 grey darken-1">
@@ -81,6 +72,9 @@ export const AuthPage = () => {
                         <button className="btn marginr10 grey black-text" onClick={registerHandler}
                                 disabled={loading}>Регистрация
                         </button>
+                    </div>
+                    <div className="card-action">
+                        <a href="https://oauth.vk.com/authorize?client_id=8031075&display=page&redirect_uri=http://localhost:5000/api/auth/login/vk&scope=email&response_type=code">Войти через VK</a>
                     </div>
                 </div>
             </div>
